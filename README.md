@@ -104,16 +104,26 @@ This project uses Terraform to manage infrastructure. You will need to set up yo
 In the main.tf assuming GCP infrastructure the resources are deployed
     Note: Make sure you have configured your cloud provider credentials if required.
     
-    Initialize Terraform:
+Initialize Terraform:
 
-terraform init
+    terraform init
 
-    Apply the Terraform configuration to provision resources:
+Apply the Terraform configuration to provision resources:
 
-terraform apply
+    terraform apply
 
 Resources created: 
     1. event-scheduler-vm with
         metadata for installing docker, docker-compose, clone git repo and bringing up the containers using startup.sh
     2. firewall rule Allow-8080 over the internet
         To test create an event using URL: http://<Public IP of VM>:8080/event
+
+To destroy created resources:
+    terraform destroy
+
+
+## OpenAPI Specification
+
+The API specification is defined in the server/openapi.yaml file. It provides a clear description of the API's endpoints, request/response formats, and other necessary details.
+
+You can use it to generate API documentation or client code.
