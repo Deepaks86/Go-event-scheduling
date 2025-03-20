@@ -108,6 +108,10 @@ Initialize Terraform:
 
     terraform init
 
+Once the Terraform configuration is initialized, run the following command. This will output a detailed list of changes Terraform intends to make. It shows you what resources are going to be created, modified, or destroyed.
+    
+    terraform plan
+
 Apply the Terraform configuration to provision resources:
 
     terraform apply
