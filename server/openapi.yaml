@@ -1,0 +1,376 @@
+openapi: 3.1.0
+info:
+  title: Event Scheduling API
+  description: API for managing events, participants, and availability
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /event:
+    post:
+      summary: Create a new event
+      operationId: createEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Brainstorming meeting"
+                slots:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      start_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T10:00:00Z"
+                      end_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T12:00:00Z"
+                estimatedTime:
+                  type: string
+                  format: duration
+                  example: "PT1H"
+                participants:
+                  type: array
+                  items:
+                    type: string
+                    example: "user1"
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Event created successfully with ID: 1"
+        '400': 
+          description: Invalid input
+
+  /events/{id}:
+    get:
+      summary: Get an event by ID
+      operationId: getEvent
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "1"
+                  title:
+                    type: string
+                    example: "Brainstorming meeting"
+                  slots:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        start_time:
+                          type: string
+                          format: date-time
+                        end_time:
+                          type: string
+                          format: date-time
+                  estimatedTime:
+                    type: string
+                    format: duration
+                  participants:
+                    type: array
+                    items:
+                      type: string
+                      example: "user1"
+        '404':
+          description: Event not found
+
+  /event/{id}:
+    put:
+      summary: Update an event by ID
+      operationId: updateEvent
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Brainstorming meeting"
+                slots:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      start_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T14:00:00Z"
+                      end_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T16:00:00Z"
+                estimatedTime:
+                  type: string
+                  format: duration
+                  example: "PT1H"
+                participants:
+                  type: array
+                  items:
+                    type: string
+                    example: "user1"
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "1"
+                  title:
+                    type: string
+                    example: "Updated Brainstorming meeting"
+                  slots:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        start_time:
+                          type: string
+                          format: date-time
+                        end_time:
+                          type: string
+                          format: date-time
+                  estimatedTime:
+                    type: string
+                    format: duration
+                  participants:
+                    type: array
+                    items:
+                      type: string
+                      example: "user1"
+        '404':
+          description: Event not found
+        '400':
+          description: Invalid input
+
+    delete:
+      summary: Delete an event by ID
+      operationId: deleteEvent
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Event deleted successfully
+        '404':
+          description: Event not found
+
+  /participant:
+    post:
+      summary: Create availability for a participant
+      operationId: createParticipantAvailability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                participant_id:
+                  type: string
+                  example: "1"
+                event_id:
+                  type: string
+                  example: "1"
+                slots:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      start_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T10:00:00Z"
+                      end_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T12:00:00Z"
+      responses:
+        '200':
+          description: Availability created successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: Event not found
+        '409':
+          description: This availability has already been recorded
+
+  /participant/{participant_id}:
+    get:
+      summary: Get availability of a participant
+      operationId: getParticipantAvailability
+      parameters:
+        - in: path
+          name: participant_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Participant availability found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  participant_id:
+                    type: string
+                    example: "1"
+                  availability:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        start_time:
+                          type: string
+                          format: date-time
+                        end_time:
+                          type: string
+                          format: date-time
+        '404':
+          description: Participant not found
+
+    put:
+      summary: Update availability of a participant
+      operationId: updateParticipantAvailability
+      parameters:
+        - in: path
+          name: participant_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  example: "1"
+                slots:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      start_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T12:00:00Z"
+                      end_time:
+                        type: string
+                        format: date-time
+                        example: "2025-03-19T14:00:00Z"
+      responses:
+        '200':
+          description: Availability updated successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: Participant or event not found
+
+
+  /participant/{participant_id}/event/{event_id}:
+    delete:
+      summary: Delete availability of a participant for an event
+      operationId: deleteParticipantAvailability
+      parameters:
+        - in: path
+          name: participant_id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: event_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All slots for this event deleted successfully
+        '404':
+          description: Participant or event not found
+
+  /event/{id}/find-common-slots:
+    get:
+      summary: Find common available slots for all participants
+      operationId: findCommonSlots
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Common slots found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recommendedTimeSlots:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slot:
+                          type: object
+                          properties:
+                            start_time:
+                              type: string
+                              format: date-time
+                            end_time:
+                              type: string
+                              format: date-time
+                        unavailableParticipants:
+                          type: array
+                          items:
+                            type: string
+        '404':
+          description: Event not found

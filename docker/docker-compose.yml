@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: ../server
+    environment:
+      - PORT=8080
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    restart: unless-stopped
+    # Scale the go-app service to multiple instances (for example, 3 replicas)
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+
+  nginx:
+    build: ../nginx
+    container_name: nginx
+    ports:
+      - "8080:8080"  # Exposing port 8080 on the host, routed to the internal port 80 of Nginx
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Custom Nginx config
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+networks:
+  app-network:
+    driver: bridge
