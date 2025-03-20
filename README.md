@@ -113,10 +113,11 @@ Apply the Terraform configuration to provision resources:
     terraform apply
 
 Resources created: 
-    1. event-scheduler-vm with
+1. event-scheduler-vm with
         metadata for installing docker, docker-compose, clone git repo and bringing up the containers using startup.sh
-    2. firewall rule Allow-8080 over the internet
-        To test create an event using URL: http://<Public IP of VM>:8080/event
+2. firewall rule Allow-8080 over the internet
+
+To test create an event using URL: http://<Public IP of VM>:8080/event
 
 To destroy created resources:
     terraform destroy
